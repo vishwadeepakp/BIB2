@@ -98,7 +98,7 @@ export function Navbar() {
               <Button variant="ghost" className="flex-1">
                 {t('nav.login')}
               </Button>
-              <Button className="flex-1 bg-primary hover:bg-primary/90">
+              <Button className="flex-1 bg-primary hover:bg-primary/90" onClick={() => router.push('/register')}>
                 {t('nav.register')}
               </Button>
             </div>
