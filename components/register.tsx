@@ -15,12 +15,17 @@ export function RegisterComp() {
     mobile: '',
     address: '',
     otp: '',
-    refcode: ''
+    refcode: '',
+    transactionId: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [otpSent, setOtpSent] = useState(false);
+  const [otpLoader, setOtpLoader] = useState(false);
+  const [otpVerifyLoader, setOtpVerifyLoader] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
 
 
   useEffect(() => {
@@ -58,6 +63,19 @@ export function RegisterComp() {
     }));
   };
 
+  const validatePayment = () => {
+    const newErrors: Record<string, string> = {};
+    const transactionId = formData.transactionId.trim();
+
+    if (!transactionId) {
+      newErrors.transactionId = "Transaction ID is required";
+    } else if (!/^[A-Za-z0-9_-]{8,50}$/.test(transactionId)) {
+      newErrors.transactionId = "Enter a valid PhonePe Transaction ID";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
@@ -93,30 +111,30 @@ export function RegisterComp() {
   };
 
   const handleSendOtp = async () => {
-    if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-      setErrors((prev) => ({
-        ...prev,
-        mobile: 'Enter a valid mobile number',
-      }));
-      return;
+    try {
+      if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
+        setErrors((prev) => ({
+          ...prev,
+          mobile: 'Enter a valid mobile number',
+        }));
+        return;
+      }
+      setOtpLoader(true);
+      const appVerifier = window.recaptchaVerifier;
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        `+91${formData.mobile}`,
+        appVerifier
+      );
+      window.confirmationResult = confirmationResult;
+      setOtpSent(true);
+      alert('OTP sent successfully');
+    } catch (err: any) {
+      alert('Error ' + err.message);
+
     }
+    setOtpLoader(false);
 
-    const appVerifier = window.recaptchaVerifier;
-
-    const confirmationResult = await signInWithPhoneNumber(
-      auth,
-      `+91${formData.mobile}`,
-      appVerifier
-    );
-
-    window.confirmationResult = confirmationResult;
-
-
-    // TODO: Call your Send OTP API here
-    // await sendOtp(formData.mobile);
-
-    setOtpSent(true);
-    alert('OTP sent successfully');
   };
 
   const handleVerifyOtp = async () => {
@@ -128,12 +146,9 @@ export function RegisterComp() {
         }));
         return;
       }
-
-      // TODO: Call your Verify OTP API here
+      setOtpVerifyLoader(true);
       const result = await window.confirmationResult.confirm(formData.otp);
-
       const verified = result?.user; // Replace with API response
-
       if (verified) {
         setOtpVerified(true);
         setErrors((prev) => ({
@@ -149,29 +164,34 @@ export function RegisterComp() {
         otp: 'Invalid OTP',
       }));
     }
+    setOtpVerifyLoader(false);
+
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validate()) return;
-
     console.log('Submitted:', formData);
+    setOpen(true);
+  };
 
+  const handleSubmitForm = () => {
+    console.log("Transaction ID:", transactionId);
+    if (!validatePayment()) return;
     alert(t('contact.form_success'));
-
     setFormData({
       name: '',
       email: '',
       mobile: '',
       address: '',
       otp: '',
-      refcode: "",
+      refcode: '',
+      transactionId: ''
     });
-
     setOtpSent(false);
     setOtpVerified(false);
     setErrors({});
+    setOpen(false);
   };
 
   return (
@@ -263,7 +283,7 @@ export function RegisterComp() {
                     disabled={otpVerified}
                     className={"mt-[10px]"}
                   >
-                    {otpSent ? 'Resend OTP' : 'Send OTP'}
+                    {otpSent ? ('Resend OTP') : (!otpLoader ? 'Send OTP' : 'Loading...')}
                   </Button>
                 </div>
 
@@ -294,7 +314,7 @@ export function RegisterComp() {
                       disabled={otpVerified}
                       className={"mt-[10px]"}
                     >
-                      {otpVerified ? 'Verified ✓' : 'Verify'}
+                      {otpVerified ? 'Verified ✓' : (!otpVerifyLoader ? 'Verify' : 'Loading...')}
                     </Button>
                   </div>
 
@@ -335,7 +355,56 @@ export function RegisterComp() {
               {t('Register')}
             </Button>
           </form>
+          {open && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/100">
+              <div className="w-[360px] rounded-xl bg-muted/50 p-6 shadow-xl ">
+                <h2 className="mb-4 text-xl font-semibold text-center">
+                  Pay Here
+                </h2>
+
+                {/* QR Code */}
+                <div className="flex justify-center mb-5">
+                  <img
+                    src="/img/QR-Code.png"
+                    alt="Payment QR"
+                    className="h-56 w-56"
+                  />
+                </div>
+
+                <input
+                  name='transactionId'
+                  type="text"
+                  placeholder="Enter Transaction ID"
+                  value={formData.transactionId}
+                  onChange={handleChange}
+                  className="w-full flex-1 px-4 py-3 rounded-lg border"
+                />
+                {errors.transactionId && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.transactionId}
+                  </p>
+                )}
+
+                <div className="flex justify-end gap-2 m-2">
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="rounded border px-4 py-2"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={handleSubmitForm}
+                    className="rounded bg-primary hover:bg-primary/90 px-4 py-2"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+
       </div>
     </section>
   );
