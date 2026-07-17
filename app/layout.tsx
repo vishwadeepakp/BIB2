@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { LanguageProvider } from '@/lib/language-context'
 import { ThemeProvider } from '@/lib/theme-provider'
+import { Navbar } from '@/components/navbar';
+import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
   title: 'AIBiz - AI-Powered Business Management for MSMEs',
@@ -49,8 +51,10 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           <LanguageProvider>
+            <Navbar />
             {children}
             {process.env.NODE_ENV === 'production' && <Analytics />}
+            <Footer />
           </LanguageProvider>
         </ThemeProvider>
       </body>

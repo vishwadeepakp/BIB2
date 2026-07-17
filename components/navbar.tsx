@@ -6,11 +6,13 @@ import { Menu, Sun, Moon, Zap } from 'lucide-react';
 import { useTheme } from '@/lib/theme-provider';
 import { useTranslation } from '@/lib/use-translation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -55,14 +57,15 @@ export function Navbar() {
 
           {/* Auth Buttons */}
           <div className="hidden sm:flex items-center gap-3">
-            <Button 
+            <Button
               variant="ghost"
               className="text-sm"
             >
               {t('nav.login')}
             </Button>
-            <Button 
+            <Button
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
+              onClick={() => router.push('/register')}
             >
               {t('nav.register')}
             </Button>
