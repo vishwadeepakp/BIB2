@@ -7,7 +7,7 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'AIBiz - AI-Powered Business Management for MSMEs',
+  title: 'BIZOS - AI-Powered Business Management for MSMEs',
   description: 'Voice-activated billing, AI invoice scanning, QR code management, and offline-first sync. Built for Indian MSMEs.',
   keywords: 'MSME, AI, voice billing, invoice scanner, business management, small business',
   generator: 'v0.app',

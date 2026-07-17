@@ -23,7 +23,7 @@ export function Navbar() {
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="font-bold text-lg text-foreground hidden sm:inline group-hover:text-primary transition-colors">
-            AIBiz
+            BIZOS
           </span>
         </Link>
 

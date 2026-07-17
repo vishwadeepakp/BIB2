@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useTranslation } from '@/lib/use-translation';
+import { useEffect } from 'react';
+import { RecaptchaVerifier, signInWithPhoneNumber, auth } from '@/components/firebase'
 
 export function RegisterComp() {
   const t = useTranslation();
@@ -13,11 +15,32 @@ export function RegisterComp() {
     mobile: '',
     address: '',
     otp: '',
+    refcode: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+
+
+  useEffect(() => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+        }
+      );
+    }
+
+    return () => {
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+      }
+    }
+  }, [])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,6 +101,17 @@ export function RegisterComp() {
       return;
     }
 
+    const appVerifier = window.recaptchaVerifier;
+
+    const confirmationResult = await signInWithPhoneNumber(
+      auth,
+      `+91${formData.mobile}`,
+      appVerifier
+    );
+
+    window.confirmationResult = confirmationResult;
+
+
     // TODO: Call your Send OTP API here
     // await sendOtp(formData.mobile);
 
@@ -86,27 +120,29 @@ export function RegisterComp() {
   };
 
   const handleVerifyOtp = async () => {
-    if (formData.otp.length !== 6) {
-      setErrors((prev) => ({
-        ...prev,
-        otp: 'Enter a valid 6-digit OTP',
-      }));
-      return;
-    }
+    try {
+      if (formData.otp.length !== 6) {
+        setErrors((prev) => ({
+          ...prev,
+          otp: 'Enter a valid 6-digit OTP',
+        }));
+        return;
+      }
 
-    // TODO: Call your Verify OTP API here
-    // const verified = await verifyOtp(formData.mobile, formData.otp);
+      // TODO: Call your Verify OTP API here
+      const result = await window.confirmationResult.confirm(formData.otp);
 
-    const verified = true; // Replace with API response
+      const verified = result?.user; // Replace with API response
 
-    if (verified) {
-      setOtpVerified(true);
-      setErrors((prev) => ({
-        ...prev,
-        otp: '',
-      }));
-      alert('OTP verified successfully');
-    } else {
+      if (verified) {
+        setOtpVerified(true);
+        setErrors((prev) => ({
+          ...prev,
+          otp: '',
+        }));
+        alert('OTP verified successfully');
+      }
+    } catch (err) {
       setOtpVerified(false);
       setErrors((prev) => ({
         ...prev,
@@ -130,6 +166,7 @@ export function RegisterComp() {
       mobile: '',
       address: '',
       otp: '',
+      refcode: "",
     });
 
     setOtpSent(false);
@@ -142,6 +179,7 @@ export function RegisterComp() {
       id="contact"
       className="py-24 px-4 sm:px-6 lg:px-8 border-t border-border bg-muted/50"
     >
+      <div id="recaptcha-container"></div>
       <div className="max-w-7xl mx-auto">
         <div className="text-2xl font-bold mb-6">Registration Form</div>
 
@@ -151,7 +189,7 @@ export function RegisterComp() {
               {/* Name */}
               <div>
                 <label className="text-sm font-medium">
-                  {t('contact.form_name')}
+                  {t('contact.form_name')}*
                 </label>
 
                 <input
@@ -171,7 +209,7 @@ export function RegisterComp() {
               {/* Email */}
               <div>
                 <label className="text-sm font-medium">
-                  {t('contact.form_email')}
+                  {t('contact.form_email')}*
                 </label>
 
                 <input
@@ -187,11 +225,25 @@ export function RegisterComp() {
                   <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
+              <div>
+                <label className="text-sm font-medium">Referral Code</label>
+                <div className="flex gap-2 mt-2">
+                  <input
+                    type="text"
+                    name="refcode"
+                    value={formData.refcode}
+                    onChange={handleChange}
+                    maxLength={6}
+                    placeholder="Enter Referral Code"
+                    className="flex-1 px-4 py-3 rounded-lg border"
+                  />
+                </div>
+              </div>
 
               {/* Mobile */}
               <div>
                 <label className="text-sm font-medium">
-                  {t('Mobile Number')}
+                  {t('Mobile Number')}*
                 </label>
 
                 <div className="flex gap-2 mt-2">
@@ -209,6 +261,7 @@ export function RegisterComp() {
                     type="button"
                     onClick={handleSendOtp}
                     disabled={otpVerified}
+                    className={"mt-[10px]"}
                   >
                     {otpSent ? 'Resend OTP' : 'Send OTP'}
                   </Button>
@@ -222,7 +275,7 @@ export function RegisterComp() {
               {/* OTP */}
               {otpSent && (
                 <div>
-                  <label className="text-sm font-medium">OTP</label>
+                  <label className="text-sm font-medium">OTP*</label>
 
                   <div className="flex gap-2 mt-2">
                     <input
@@ -239,6 +292,7 @@ export function RegisterComp() {
                       type="button"
                       onClick={handleVerifyOtp}
                       disabled={otpVerified}
+                      className={"mt-[10px]"}
                     >
                       {otpVerified ? 'Verified ✓' : 'Verify'}
                     </Button>
@@ -254,7 +308,7 @@ export function RegisterComp() {
             {/* Address */}
             <div>
               <label className="text-sm font-medium">
-                {t('Address')}
+                {t('Address')}*
               </label>
 
               <textarea
