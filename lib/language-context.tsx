@@ -41,6 +41,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('businesshub-language', lang);
+      document.documentElement.lang = lang
+
   }, []);
 
   if (!mounted) {
