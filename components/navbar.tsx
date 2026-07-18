@@ -75,6 +75,9 @@ export function Navbar() {
             <Button
               variant="ghost"
               className="text-sm"
+              onClick={()=>{
+               window.location.href = "https://bibapp.vercel.app";
+              }}
             >
               {t('nav.login')}
             </Button>
