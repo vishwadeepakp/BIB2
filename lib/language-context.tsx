@@ -26,11 +26,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     
     if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'hi')) {
       setLanguageState(savedLanguage);
+      document.documentElement.lang = savedLanguage
     } else {
       // Detect browser language
       const browserLang = navigator.language?.startsWith('hi') ? 'hi' : 'en';
       setLanguageState(browserLang);
       localStorage.setItem('businesshub-language', browserLang);
+      document.documentElement.lang = browserLang
     }
     
     setMounted(true);
