@@ -3,9 +3,12 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslation } from '@/lib/use-translation';
+import { useRouter } from 'next/navigation';
 
 export function HeroSection() {
   const t = useTranslation();
+  const router = useRouter();
+
   return (
     <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background via-background to-card border-b border-border">
       <div className="max-w-7xl mx-auto">
@@ -28,14 +31,15 @@ export function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <Button 
+              <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-2"
+                onClick={() => router.push('/register?tial=true')}
               >
                 {t('hero.cta1')}
                 <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button 
+              <Button
                 size="lg"
                 variant="outline"
                 className="font-semibold"

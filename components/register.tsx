@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslation } from '@/lib/use-translation';
 import { useEffect } from 'react';
 import { RecaptchaVerifier, signInWithPhoneNumber, auth } from '@/components/firebase'
+import { useSearchParams } from "next/navigation";
 
 export function RegisterComp() {
   const t = useTranslation();
@@ -17,6 +18,7 @@ export function RegisterComp() {
     otp: '',
     refcode: '',
     transactionId: '',
+    agreeTrial: false
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -25,7 +27,10 @@ export function RegisterComp() {
   const [otpVerifyLoader, setOtpVerifyLoader] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [open, setOpen] = useState(false);
-  const [transactionId, setTransactionId] = useState("");
+
+  const searchParams = useSearchParams();
+
+  const isTrial = searchParams.get("tial") === "true"; // or "trial"
 
 
   useEffect(() => {
@@ -50,12 +55,18 @@ export function RegisterComp() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, checked } = e.target;
+    if (name === 'agreeTrial') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
 
     setErrors((prev) => ({
       ...prev,
@@ -66,11 +77,12 @@ export function RegisterComp() {
   const validatePayment = () => {
     const newErrors: Record<string, string> = {};
     const transactionId = formData.transactionId.trim();
-
-    if (!transactionId) {
-      newErrors.transactionId = "Transaction ID is required";
-    } else if (!/^[A-Za-z0-9_-]{8,50}$/.test(transactionId)) {
-      newErrors.transactionId = "Enter a valid PhonePe Transaction ID";
+    if (!formData.agreeTrial) {
+      if (!transactionId) {
+        newErrors.transactionId = "Transaction ID is required";
+      } else if (!/^[A-Za-z0-9_-]{8,50}$/.test(transactionId)) {
+        newErrors.transactionId = "Enter a valid PhonePe Transaction ID";
+      }
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -176,7 +188,6 @@ export function RegisterComp() {
   };
 
   const handleSubmitForm = () => {
-    console.log("Transaction ID:", transactionId);
     if (!validatePayment()) return;
     alert(t('contact.form_success'));
     setFormData({
@@ -186,7 +197,8 @@ export function RegisterComp() {
       address: '',
       otp: '',
       refcode: '',
-      transactionId: ''
+      transactionId: '',
+      agreeTrial: false
     });
     setOtpSent(false);
     setOtpVerified(false);
@@ -359,7 +371,7 @@ export function RegisterComp() {
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/100">
               <div className="w-[360px] rounded-xl bg-muted/50 p-6 shadow-xl ">
                 <h2 className="mb-4 text-xl font-semibold text-center">
-                  Pay Here
+                  Pay Here, Rs 1200
                 </h2>
 
                 {/* QR Code */}
@@ -384,7 +396,22 @@ export function RegisterComp() {
                     {errors.transactionId}
                   </p>
                 )}
-
+                  {isTrial &&
+                    < div className="mt-4 flex items-start gap-2">
+                      <input
+                        id="freeTrial"
+                        type="checkbox"
+                        name='agreeTrial'
+                        checked={formData.agreeTrial}
+                        onChange={handleChange}
+                        className="mt-1 h-4 w-4"
+                      />
+                      <label htmlFor="freeTrial" className="text-sm">
+                        I understand that I will receive a <strong>14-day free trial</strong>.
+                        After the trial ends, the subscription will continue according to the selected plan unless cancelled.
+                      </label>
+                    </div>
+                  }
                 <div className="flex justify-end gap-2 m-2">
                   <button
                     onClick={() => setOpen(false)}
@@ -406,6 +433,6 @@ export function RegisterComp() {
         </div>
 
       </div>
-    </section>
+    </section >
   );
 }
