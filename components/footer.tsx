@@ -21,7 +21,7 @@ export function Footer() {
               </div>
               <span className="font-bold text-lg">BusinessHub</span>
             </Link>
-            <p className="text-white/70 text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed">
               {t('footer.tagline')}
             </p>
           </div>
@@ -31,22 +31,22 @@ export function Footer() {
             <h4 className="font-semibold">{t('footer.product')}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#features" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#features" className="transition-colors">
                   {t('footer.features')}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   {t('footer.pricing')}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   Security
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   Roadmap
                 </Link>
               </li>
@@ -58,22 +58,22 @@ export function Footer() {
             <h4 className="font-semibold">{t('footer.company')}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   {t('footer.about')}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   {t('footer.blog')}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#" className="transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="text-white/70 hover:text-white transition-colors">
+                <Link href="#contact" className="transition-colors">
                   Contact
                 </Link>
               </li>
