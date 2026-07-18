@@ -7,12 +7,16 @@ import { useTheme } from '@/lib/theme-provider';
 import { useTranslation } from '@/lib/use-translation';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/language-context';
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
+
+  const { language, setLanguage } = useLanguage();
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,6 +46,17 @@ export function Navbar() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="rounded-md border border-border bg-background px-2 py-1 text-sm outline-none"
+            >
+              <option value="en">🇺🇸 English</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
+              {/* <option value="mr">🇮🇳 मराठी</option> */}
+            </select>
+          </div>
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -95,6 +110,17 @@ export function Navbar() {
               {t('nav.contact')}
             </Link>
             <div className="pt-3 border-t border-border flex gap-2">
+              <div className=" sm:flex items-center gap-2">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="rounded-md border border-border bg-background px-2 py-1 text-sm outline-none"
+                >
+                  <option value="en">🇺🇸 English</option>
+                  <option value="hi">🇮🇳 हिन्दी</option>
+                  {/* <option value="mr">🇮🇳 मराठी</option> */}
+                </select>
+              </div>
               <Button variant="ghost" className="flex-1">
                 {t('nav.login')}
               </Button>

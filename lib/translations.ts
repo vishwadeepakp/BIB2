@@ -65,7 +65,7 @@ export const translations = {
     'contact.form_email': 'Email Address',
     'contact.form_message': 'Your Message',
     'contact.form_submit': 'Send Message',
-    'contact.form_success': 'Thank you! We\'ll get back to you soon.',
+    'contact.form_success': 'Your payment status is currently Pending. Our team will verify your payment and approve it within 8 hours. You will be notified once the verification is complete.',
 
     // Footer
     'footer.tagline': 'Making small business management simple, affordable, and accessible to all.',
@@ -144,7 +144,7 @@ export const translations = {
     'contact.form_email': 'ईमेल पता',
     'contact.form_message': 'आपका संदेश',
     'contact.form_submit': 'संदेश भेजें',
-    'contact.form_success': 'धन्यवाद! हम जल्द ही आपसे संपर्क करेंगे।',
+    'contact.form_success': 'आपका भुगतान वर्तमान में लंबित (Pending) है। हमारी टीम आपके भुगतान की जांच करेगी और 8 घंटे के भीतर इसे सत्यापित (Approve) कर देगी। सत्यापन पूरा होने के बाद आपको सूचित किया जाएगा।',
 
     // Footer
     'footer.tagline': 'छोटे व्यवसाय प्रबंधन को सरल, सस्ता और सभी के लिए सुलभ बनाना।',
@@ -162,12 +162,8 @@ export const translations = {
 };
 
 export function t(key: string, lang: Language): string {
-  const keys = key.split('.');
   let value: any = translations[lang];
-
-  for (const k of keys) {
-    value = value?.[k];
-  }
+  value = value?.[key]
 
   if (!value) {
     return translations.en[key as keyof typeof translations.en] || key;
