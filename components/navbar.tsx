@@ -49,7 +49,7 @@ export function Navbar() {
           <div className="hidden sm:flex items-center gap-2">
             <select
               value={language}
-              onChange={(e) => setLanguage(e.target.value)}
+              onChange={(e) => setLanguage(e?.target?.value)}
               className="rounded-md border border-border bg-background px-2 py-1 text-sm outline-none"
             >
               <option value="en">🇺🇸 English</option>
