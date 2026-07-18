@@ -189,7 +189,11 @@ export function RegisterComp() {
 
   const handleSubmitForm = () => {
     if (!validatePayment()) return;
-    alert(t('contact.form_success'));
+    if (isTrial) {
+      alert(t('contact.trail_form_success'));
+    } else {
+      alert(t('contact.form_success'));
+    }
     setFormData({
       name: '',
       email: '',
@@ -370,33 +374,45 @@ export function RegisterComp() {
           {open && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/100">
               <div className="w-[360px] rounded-xl bg-muted/50 p-6 shadow-xl ">
-                <h2 className="mb-4 text-xl font-semibold text-center">
-                  Pay Here, Rs 1200
-                </h2>
+                {!formData?.agreeTrial &&
+                  <>
+                    <h2 className="mb-4 text-xl font-semibold text-center">
+                      Pay Here, Rs 1200
+                    </h2>
 
-                {/* QR Code */}
-                <div className="flex justify-center mb-5">
-                  <img
-                    src="/img/QR-Code.png"
-                    alt="Payment QR"
-                    className="h-56 w-56"
-                  />
-                </div>
+                    {/* QR Code */}
+                    <div className="flex justify-center mb-5">
+                      <img
+                        src="/img/QR-Code.png"
+                        alt="Payment QR"
+                        className="h-56 w-56"
+                      />
+                    </div>
 
-                <input
-                  name='transactionId'
-                  type="text"
-                  placeholder="Enter Transaction ID"
-                  value={formData.transactionId}
-                  onChange={handleChange}
-                  className="w-full flex-1 px-4 py-3 rounded-lg border"
-                />
-                {errors.transactionId && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.transactionId}
-                  </p>
-                )}
-                  {isTrial &&
+                    <input
+                      name='transactionId'
+                      type="text"
+                      placeholder="Enter Transaction ID"
+                      value={formData.transactionId}
+                      onChange={handleChange}
+                      className="w-full flex-1 px-4 py-3 rounded-lg border"
+                    />
+                    {errors.transactionId && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.transactionId}
+                      </p>
+                    )}
+                  </>
+                }
+
+                {isTrial &&
+                  <>
+                    {!formData?.agreeTrial &&
+                      <div className="mt-4 flex gap-2 justify-center">
+                        {t('OR')}
+                      </div>
+                    }
+
                     < div className="mt-4 flex items-start gap-2">
                       <input
                         id="freeTrial"
@@ -407,11 +423,11 @@ export function RegisterComp() {
                         className="mt-1 h-4 w-4"
                       />
                       <label htmlFor="freeTrial" className="text-sm">
-                        I understand that I will receive a <strong>14-day free trial</strong>.
-                        After the trial ends, the subscription will continue according to the selected plan unless cancelled.
+                        {t('contact.trail_form_Condition')}
                       </label>
                     </div>
-                  }
+                  </>
+                }
                 <div className="flex justify-end gap-2 m-2">
                   <button
                     onClick={() => setOpen(false)}

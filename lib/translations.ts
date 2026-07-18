@@ -2,6 +2,8 @@ export type Language = 'en' | 'hi';
 
 export const translations = {
   en: {
+    'OR': 'OR',
+
     // Navbar
     'nav.features': 'Features',
     'nav.pricing': 'Pricing',
@@ -66,6 +68,8 @@ export const translations = {
     'contact.form_message': 'Your Message',
     'contact.form_submit': 'Send Message',
     'contact.form_success': 'Your payment status is currently Pending. Our team will verify your payment and approve it within 8 hours. You will be notified once the verification is complete.',
+    'contact.trail_form_success': 'Welcome! Your 14-day free trial has been activated successfully.',
+    'contact.trail_form_Condition': 'I understand that I will receive a 14-day free trial. After the trial ends, my subscription will continue according to the selected plan unless I cancel it.',
 
     // Footer
     'footer.tagline': 'Making small business management simple, affordable, and accessible to all.',
@@ -81,6 +85,7 @@ export const translations = {
     'footer.copyright': '© 2024 BusinessHub. All rights reserved.',
   },
   hi: {
+    'OR': 'या',
     // Navbar
     'nav.features': 'विशेषताएं',
     'nav.pricing': 'मूल्य निर्धारण',
@@ -145,6 +150,9 @@ export const translations = {
     'contact.form_message': 'आपका संदेश',
     'contact.form_submit': 'संदेश भेजें',
     'contact.form_success': 'आपका भुगतान वर्तमान में लंबित (Pending) है। हमारी टीम आपके भुगतान की जांच करेगी और 8 घंटे के भीतर इसे सत्यापित (Approve) कर देगी। सत्यापन पूरा होने के बाद आपको सूचित किया जाएगा।',
+    'contact.trail_form_success': 'स्वागत है! आपका 14 दिनों का फ्री ट्रायल सफलतापूर्वक शुरू हो गया है।',
+    'contact.trail_form_Condition': 'मैं समझता/समझती हूँ कि मुझे 14 दिनों का निःशुल्क ट्रायल मिलेगा। ट्रायल समाप्त होने के बाद, यदि मैं सदस्यता रद्द नहीं करता/करती हूँ, तो मेरी सदस्यता चुनी गई योजना के अनुसार जारी रहेगी।',
+
 
     // Footer
     'footer.tagline': 'छोटे व्यवसाय प्रबंधन को सरल, सस्ता और सभी के लिए सुलभ बनाना।',
