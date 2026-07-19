@@ -27,6 +27,8 @@ export function RegisterComp() {
   const [otpVerifyLoader, setOtpVerifyLoader] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(null);
 
   const searchParams = useSearchParams();
 
@@ -187,8 +189,31 @@ export function RegisterComp() {
     setOpen(true);
   };
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     if (!validatePayment()) return;
+    try {
+      setLoading(true);
+      setErr(null)
+      const res: any = await fetch(`${process.env.NEXT_PUBLIC_API_GATWAY}/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      if (!res?.ok) {
+        throw new Error(`API ERROR ${res.statusText} ${res.status}`)
+      }
+      submitRegister()
+
+    } catch (err: any) {
+      setErr(err.message)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  function submitRegister() {
     if (isTrial) {
       alert(t('contact.trail_form_success'));
     } else {
@@ -208,7 +233,15 @@ export function RegisterComp() {
     setOtpVerified(false);
     setErrors({});
     setOpen(false);
-  };
+
+  }
+
+  if (loading) return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/100">
+    <div className="w-[360px] rounded-xl bg-blue-500 p-6 shadow-xl ">Loading...</div></div>
+
+  if (err) return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/100">
+    <div className="w-[360px] rounded-xl p-6 shadow-xl bg-red-500">{err}</div></div>
+
 
   return (
     <section
