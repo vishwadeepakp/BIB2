@@ -202,7 +202,8 @@ export function RegisterComp() {
         body: JSON.stringify(formData)
       });
       if (!res?.ok) {
-        throw new Error(`API ERROR ${res.statusText} ${res.status}`)
+        const result = await res.json();
+        throw new Error(`API ERROR ${res.statusText} ${res.status} ${result?.error || ''}`);
       }
       submitRegister()
 
