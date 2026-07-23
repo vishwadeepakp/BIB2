@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/use-translation';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/lib/language-context';
+import Image from 'next/image';
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -23,11 +24,11 @@ export function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary-foreground" />
+          <div className="w-40 h-50  rounded-lg flex items-center justify-center">
+            <Image width={40} height={40} src="/img/icon-removebg-preview.png" alt="VyaparAI Logo" className="w-40 h-20 text-primary-foreground" />
           </div>
           <span className="font-bold text-lg text-foreground hidden sm:inline group-hover:text-primary transition-colors">
-            BIZOS
+            VyaparAI
           </span>
         </Link>
 
