@@ -23,14 +23,15 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-40 h-50  rounded-lg flex items-center justify-center">
-            <Image width={40} height={40} src="/img/icon-removebg-preview.png" alt="VyaparAI Logo" className="w-40 h-20 text-primary-foreground" />
-          </div>
-          <span className="font-bold text-lg text-foreground hidden sm:inline group-hover:text-primary transition-colors">
-            VyaparAI
-          </span>
-        </Link>
+        <div className="w-12 h-12 relative">
+          <Image
+            src="/img/icon-192-new.png"
+            alt="VyaparAI Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">

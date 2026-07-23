@@ -68,11 +68,11 @@ export function Features() {
                   {t(feature.descKey)}
                 </p>
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                {/* <div className="mt-6 pt-6 border-t border-gray-100">
                   <a href="#" className="text-[#0f4c3a] font-semibold text-sm hover:gap-2 inline-flex items-center gap-1 transition-all">
                     Learn more →
                   </a>
-                </div>
+                </div> */}
               </Card>
             );
           })}

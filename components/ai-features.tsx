@@ -90,11 +90,11 @@ export function AIFeatures() {
                   {t(feature.descKey)}
                 </p>
 
-                <div className="mt-6 pt-6 border-t border-border">
+                {/* <div className="mt-6 pt-6 border-t border-border">
                   <a href="#" className="text-primary font-semibold text-sm hover:text-primary/80 inline-flex items-center gap-1 transition-all">
                     Learn more →
                   </a>
-                </div>
+                </div> */}
               </Card>
             );
           })}
